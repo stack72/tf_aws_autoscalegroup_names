@@ -1,5 +1,5 @@
 variable "region" {}
 
-output "autoscalegroup_names" {
-    value = "${lookup(var.autoscalegroup_names, var.region)}"
+output "asg_names" {
+    value = "${join(",", lookup(var.autoscalegroup_names, var.region))}"
 }
