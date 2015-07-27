@@ -1,14 +1,23 @@
 #!/usr/bin/ruby
 require 'json'
+require 'optparse'
 
-profiles = []
-File.open(File.expand_path('~/.aws/credentials'), 'r') do |f|
-  f.each_line do |l|
-    next unless l.gsub!(/^\[\s*(\w+)\s*\].*/, '\1')
-    l.chomp!
-    profiles.push(l)
+options = {:aws_account => 'default' }
+
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: getvariables.rb [options]"
+  opts.on('-a','--aws-account aws_account', 'AWS Account Name') do |aws_account|
+    options[:aws_account] = aws_account
+  end
+  opts.on('-h', '--help', 'Displays Help') do
+    puts opts
+    exit
   end
 end
+
+optparse.parse!
+
+profiles = options[:aws_account].split(',')
 
 asg_hash = Hash.new
 

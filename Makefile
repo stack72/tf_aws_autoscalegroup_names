@@ -1,10 +1,10 @@
+account?=default
 .PHONEY: all
 
-all: variables.tf.json
+all: clean variables.tf.json
 
 variables.tf.json:
-	ruby getvariables.rb
+	ruby getvariables.rb -a $(account)
 
 clean:
 	rm -f variables.tf.json
-
