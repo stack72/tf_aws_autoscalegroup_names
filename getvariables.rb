@@ -20,7 +20,7 @@ data = profiles.map do |account|
   end
   regions = JSON.parse(regions_json)['Regions'].map { |d| d['RegionName'] }
   regions.map do |region|
-    asg_names = []
+    asgs_list = []
     asgs = `aws autoscaling describe-auto-scaling-groups --profile #{account} --region #{region}`
     if $?.exitstatus != 0
       print "Failed to run aws autoscaling describe-auto-scaling-groups --profile #{account} --region #{region}"
@@ -29,10 +29,10 @@ data = profiles.map do |account|
 
     autoscalegroups = JSON.parse(asgs)
     autoscalegroups['AutoScalingGroups'].each do |asg|
-        asg_names.push(asg['AutoScalingGroupName']) unless asg_names.include?(asg['AutoScalingGroupName'])
+        asgs_list.push(asg['AutoScalingGroupName']) unless asgs_list.include?(asg['AutoScalingGroupName'])
     end
 
-    asg_hash.merge!(Hash["#{region}" => asg_names])
+    asg_hash.merge!(Hash["#{region}" => asgs_list.join(",")])
   end
 
 end
